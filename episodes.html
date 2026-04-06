@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Episodes — BRDO</title>
+  <meta name="description" content="Every episode of BRDO — Barely Researched, Deeply Opinionated. Watch or listen to all 30 episodes.">
+  <meta property="og:title" content="All Episodes — BRDO">
+  <meta property="og:image" content="./BRDO Thumbnail.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow:      #F5C216;
+      --yellow-dark: #E0AC00;
+      --orange:      #F07B1A;
+      --dark:        #1A1209;
+      --cream:       #FFF8E1;
+      --cream-mid:   #F5EDD0;
+      --font-display: 'Bangers', cursive;
+      --font-body:    'Lora', serif;
+      --font-ui:      'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--dark);
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(26, 18, 9, 0.97);
+      backdrop-filter: blur(12px);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(245,194,22,0.15);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      letter-spacing: 0.05em;
+      color: var(--yellow);
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    .nav-back {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,248,225,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-back:hover { color: var(--yellow); }
+
+    /* ─── HEADER ──────────────────────────────────────── */
+    .page-header {
+      background: repeating-conic-gradient(var(--yellow) 0deg 10deg, var(--orange) 10deg 20deg);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: -100%;
+      width: 300%;
+      height: 300%;
+      background: repeating-conic-gradient(rgba(255,255,255,0.06) 0deg 10deg, transparent 10deg 20deg);
+      animation: spin 90s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .page-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(26,18,9,0.2) 100%);
+      pointer-events: none;
+    }
+
+    .page-header-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .page-label {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(26,18,9,0.6);
+      margin-bottom: 0.75rem;
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: 0.06em;
+      font-weight: 400;
+      color: var(--dark);
+    }
+
+    .page-sub {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: rgba(26,18,9,0.65);
+      margin-top: 1rem;
+    }
+
+    /* ─── EPISODES GRID ───────────────────────────────── */
+    .episodes-section {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    .episodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .ep-card {
+      background: #231810;
+      border: 2px solid rgba(245,194,22,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+      scroll-margin-top: 90px;
+    }
+
+    .ep-card:hover {
+      border-color: rgba(245,194,22,0.45);
+      transform: translateY(-4px);
+    }
+
+    .ep-card-header {
+      padding: 1.25rem 1.5rem 0.75rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .ep-num {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: var(--yellow);
+      -webkit-text-stroke: 1.5px rgba(26,18,9,0.4);
+    }
+
+    .ep-badge {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      background: var(--orange);
+      color: white;
+    }
+
+    .ep-embed {
+      width: 100%;
+      display: block;
+      line-height: 0;
+    }
+
+    .ep-embed iframe {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 624 / 351;
+      border: none;
+      display: block;
+      border-radius: 0;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────────── */
+    .page-footer {
+      background: rgba(0,0,0,0.3);
+      border-top: 1px solid rgba(245,194,22,0.1);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .page-footer p {
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      color: rgba(255,248,225,0.3);
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2rem;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 3px solid var(--yellow);
+      background: transparent;
+      color: var(--yellow);
+      transition: background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
+    }
+
+    .btn:hover {
+      background: var(--yellow);
+      color: var(--dark);
+      transform: translate(-3px, -3px);
+      box-shadow: 6px 6px 0 rgba(245,194,22,0.3);
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 760px) {
+      .episodes-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">BRDO</a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Home
+    </a>
+  </nav>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-label">The Full Archive</div>
+      <h1 class="page-title">All Episodes</h1>
+      <p class="page-sub">30 episodes. Barely researched. Deeply opinionated. Enjoy.</p>
+    </div>
+  </header>
+
+  <main class="episodes-section">
+    <div class="episodes-grid">
+
+      <div class="ep-card" id="ep-030">
+        <div class="ep-card-header">
+          <span class="ep-num">030</span>
+          <span class="ep-badge">Latest</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/5hEx5OFJVXSa1DOtDunZHw/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 030"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-029">
+        <div class="ep-card-header">
+          <span class="ep-num">029</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/2QA9naNdxtcqHJOVj2F40g/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 029"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-028">
+        <div class="ep-card-header">
+          <span class="ep-num">028</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/3lyPuEa9m05iAIHUM6hCtc/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 028"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-027">
+        <div class="ep-card-header">
+          <span class="ep-num">027</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/4nFKnJ1bS79ZC7DZ4Sjyom/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 027"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-026">
+        <div class="ep-card-header">
+          <span class="ep-num">026</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/4a9QaQ9Zw5eDaxXBoQYsPJ/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 026"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-025">
+        <div class="ep-card-header">
+          <span class="ep-num">025</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/6WLRqDnGNNGi9qrO91MIDX/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 025"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-024">
+        <div class="ep-card-header">
+          <span class="ep-num">024</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/4zE5D0IneGBEFsdugOIvTv/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 024"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-023">
+        <div class="ep-card-header">
+          <span class="ep-num">023</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/4xz9vvnDgEblYu8an34Guj/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 023"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-022">
+        <div class="ep-card-header">
+          <span class="ep-num">022</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/6r7QyOPZ8y71DE5Jl4xNkw/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 022"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-021">
+        <div class="ep-card-header">
+          <span class="ep-num">021</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/3RMJXLsGYQblibgem8lnQi/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 021"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-020">
+        <div class="ep-card-header">
+          <span class="ep-num">020</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/68nDDthSatHBEa2cyljNp5/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 020"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-019">
+        <div class="ep-card-header">
+          <span class="ep-num">019</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/3yhAWJIwD1MPjKm7JE3xde/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 019"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-018">
+        <div class="ep-card-header">
+          <span class="ep-num">018</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/7yxG1qDpsD7k8MW6HBwKbd/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 018"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-017">
+        <div class="ep-card-header">
+          <span class="ep-num">017</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/1eRUl8QGx0rBpbpsyOJZXh/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 017"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-016">
+        <div class="ep-card-header">
+          <span class="ep-num">016</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/0YrsYbwcTQgmlXlg7U1EAz/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 016"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-015">
+        <div class="ep-card-header">
+          <span class="ep-num">015</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/5c7Lr6d0NXPA2PDxo488Zs/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 015"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-014">
+        <div class="ep-card-header">
+          <span class="ep-num">014</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/6Ueb1MUhGErOopUFE95sAd/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 014"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-013">
+        <div class="ep-card-header">
+          <span class="ep-num">013</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/3QObn6pshXzxjzJyeM3mnU/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 013"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-012">
+        <div class="ep-card-header">
+          <span class="ep-num">012</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/53oIBuXqpS0hE9i0IOF89G/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 012"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-011">
+        <div class="ep-card-header">
+          <span class="ep-num">011</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/2SeRlnKXAXI3JzH6QxQar3/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 011"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-010">
+        <div class="ep-card-header">
+          <span class="ep-num">010</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/21TRiY11CpRvL801qJMfGE/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 010"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-009">
+        <div class="ep-card-header">
+          <span class="ep-num">009</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/4F1VMbXk72bYbPXNlHOua6/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 009"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-008">
+        <div class="ep-card-header">
+          <span class="ep-num">008</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/4ZopQQB3pV1jf1g0nJ5vIn/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 008"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-007">
+        <div class="ep-card-header">
+          <span class="ep-num">007</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/7FvI3g4IbKpf5uVBnwuFxx/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 007"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-006">
+        <div class="ep-card-header">
+          <span class="ep-num">006</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/5zJdCyQPbX0MskWigPsCXE/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 006"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-005">
+        <div class="ep-card-header">
+          <span class="ep-num">005</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/3PnK7c4YgAdgSqdLaEu2IK/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 005"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-004">
+        <div class="ep-card-header">
+          <span class="ep-num">004</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/1MNorLiTl06RzyAgjurYvg/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 004"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-003">
+        <div class="ep-card-header">
+          <span class="ep-num">003</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/11r1IKWfrtRKXrjuGJ1uAS/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 003"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-002">
+        <div class="ep-card-header">
+          <span class="ep-num">002</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/0oC88DO4Z5C8TcFxMSQP86/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 002"></iframe>
+        </div>
+      </div>
+
+      <div class="ep-card" id="ep-001">
+        <div class="ep-card-header">
+          <span class="ep-num">001</span>
+          <span class="ep-badge" style="background:#27AE60;">Where It All Began</span>
+        </div>
+        <div class="ep-embed">
+          <iframe src="https://open.spotify.com/embed/episode/6DTkOJ1aqCzQYwx5qRw4SQ/video?utm_source=generator" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="BRDO Episode 001"></iframe>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <p>&copy; 2025 BRDO — Barely Researched, Deeply Opinionated. All rights reserved.</p>
+    <a href="index.html" class="btn">← Back to Home</a>
+  </footer>
+
+</body>
+</html>
