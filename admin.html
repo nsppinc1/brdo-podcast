@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRDO Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #F5C216;
+      --orange: #F07B1A;
+      --dark:   #1A1209;
+      --dark2:  #231810;
+      --cream:  #FFF8E1;
+      --green:  #27AE60;
+      --red:    #D63031;
+      --font-display: 'Bangers', cursive;
+      --font-ui: 'DM Sans', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--dark);
+      color: var(--cream);
+      min-height: 100vh;
+    }
+
+    /* ─── PASSWORD SCREEN ─────────────────────────────── */
+    #pw-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .pw-box {
+      background: var(--dark2);
+      border: 2px solid rgba(245,194,22,0.2);
+      padding: 3rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .pw-logo {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      color: var(--yellow);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .pw-sub {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,248,225,0.4);
+      margin-bottom: 2rem;
+    }
+
+    /* ─── MAIN APP ────────────────────────────────────── */
+    #app { display: none; }
+
+    header {
+      background: var(--dark2);
+      border-bottom: 2px solid rgba(245,194,22,0.15);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--yellow);
+      letter-spacing: 0.05em;
+    }
+
+    .logo span {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,248,225,0.4);
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .ep-count-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(255,248,225,0.5);
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      display: grid;
+      gap: 2rem;
+    }
+
+    /* ─── TOKEN SECTION ───────────────────────────────── */
+    .token-section {
+      background: var(--dark2);
+      border: 2px solid rgba(245,194,22,0.12);
+      padding: 1.5rem;
+    }
+
+    .token-section summary {
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,248,225,0.6);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .token-section summary::before {
+      content: '▶';
+      font-size: 0.6rem;
+      transition: transform 0.2s;
+    }
+
+    details[open] .token-section summary::before { transform: rotate(90deg); }
+
+    .token-inner { margin-top: 1.25rem; }
+
+    .token-help {
+      font-size: 0.82rem;
+      color: rgba(255,248,225,0.5);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .token-help a { color: var(--yellow); }
+
+    .token-status {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 0.8rem;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    .token-status.ok { background: rgba(39,174,96,0.15); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+    .token-status.missing { background: rgba(214,48,49,0.12); color: #e57373; border: 1px solid rgba(214,48,49,0.25); }
+
+    /* ─── CARDS ───────────────────────────────────────── */
+    .card {
+      background: var(--dark2);
+      border: 2px solid rgba(245,194,22,0.15);
+      padding: 2rem;
+    }
+
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(245,194,22,0.12);
+    }
+
+    /* ─── FORM ELEMENTS ───────────────────────────────── */
+    .field { margin-bottom: 1.25rem; }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,248,225,0.55);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"] {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 2px solid rgba(245,194,22,0.2);
+      color: var(--cream);
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus { border-color: var(--yellow); }
+
+    .field-hint {
+      font-size: 0.75rem;
+      color: rgba(255,248,225,0.35);
+      margin-top: 0.4rem;
+    }
+
+    .preview {
+      margin-top: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--green);
+      font-weight: 700;
+      min-height: 1.2em;
+    }
+
+    /* ─── BUTTONS ─────────────────────────────────────── */
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2rem;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    }
+
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: var(--dark);
+    }
+
+    .btn-yellow:not(:disabled):hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 6px 6px 0 rgba(245,194,22,0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid rgba(255,248,225,0.2);
+      color: rgba(255,248,225,0.6);
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255,248,225,0.5);
+      color: var(--cream);
+    }
+
+    /* ─── STATUS MESSAGES ─────────────────────────────── */
+    .status {
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .status.success { background: rgba(39,174,96,0.12); color: var(--green); border-left: 3px solid var(--green); display: block; }
+    .status.error   { background: rgba(214,48,49,0.1);  color: #e57373;      border-left: 3px solid #e57373;      display: block; }
+    .status.loading { background: rgba(245,194,22,0.08); color: var(--yellow); border-left: 3px solid var(--yellow); display: block; }
+
+    /* ─── DEPLOY NOTE ─────────────────────────────────── */
+    .deploy-note {
+      font-size: 0.78rem;
+      color: rgba(255,248,225,0.35);
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ PASSWORD SCREEN ═══════════════════════════════ -->
+  <div id="pw-screen">
+    <div class="pw-box">
+      <div class="pw-logo">BRDO</div>
+      <div class="pw-sub">Admin Access</div>
+      <div class="field">
+        <label for="pw-input">Password</label>
+        <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password">
+      </div>
+      <button class="btn btn-yellow" onclick="checkPassword()" style="width:100%;">Enter</button>
+      <div id="pw-error" class="status error" style="margin-top:1rem;"></div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN APP ══════════════════════════════════════ -->
+  <div id="app">
+    <header>
+      <div class="logo">BRDO <span>Admin</span></div>
+      <div class="header-right">
+        <span class="ep-count-badge" id="counts-badge">Loading…</span>
+        <button class="btn btn-outline" onclick="logout()" style="padding:0.5rem 1rem;font-size:0.72rem;">Log out</button>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- GitHub Token -->
+      <details>
+        <summary class="token-section" style="list-style:none;">
+          <span style="font-size:0.8rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,248,225,0.6);">
+            ⚙ GitHub Token
+          </span>
+        </summary>
+        <div style="background:var(--dark2);border:2px solid rgba(245,194,22,0.12);border-top:none;padding:1.5rem;">
+          <div id="token-status-badge"></div>
+          <p class="token-help">
+            This token lets the admin page save changes directly to GitHub.<br>
+            Create a <strong>Fine-grained Personal Access Token</strong> at
+            <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">github.com/settings/tokens</a>
+            with <strong>Contents: Read and write</strong> permission on the <code>nsppinc1/brdo-podcast</code> repo.
+            The token is saved only in your browser.
+          </p>
+          <div class="field">
+            <label for="gh-token">Personal Access Token</label>
+            <input type="password" id="gh-token" placeholder="github_pat_…">
+          </div>
+          <button class="btn btn-yellow" onclick="saveToken()">Save Token</button>
+          <button class="btn btn-outline" onclick="clearToken()" style="margin-left:0.75rem;">Clear</button>
+        </div>
+      </details>
+
+      <!-- Add Episode -->
+      <div class="card">
+        <div class="card-title">Add New Episode</div>
+
+        <div class="field">
+          <label for="ep-num">Episode Number</label>
+          <input type="number" id="ep-num" placeholder="031" min="1">
+          <div class="field-hint">Auto-filled with the next number. Change if needed.</div>
+        </div>
+
+        <div class="field">
+          <label for="ep-url">Spotify URL</label>
+          <input type="text" id="ep-url" placeholder="https://open.spotify.com/episode/…" oninput="previewSpotify()">
+          <div class="field-hint">Paste any Spotify episode link — share URL or embed URL.</div>
+          <div class="preview" id="ep-preview"></div>
+        </div>
+
+        <button class="btn btn-yellow" id="ep-btn" onclick="addEpisode()">Add Episode</button>
+        <div class="status" id="ep-status"></div>
+        <div class="deploy-note">After saving, Netlify will redeploy automatically — live in ~30 seconds.</div>
+      </div>
+
+      <!-- Add Clip -->
+      <div class="card">
+        <div class="card-title">Add New Clip</div>
+
+        <div class="field">
+          <label for="clip-url">YouTube URL</label>
+          <input type="text" id="clip-url" placeholder="https://www.youtube.com/shorts/…" oninput="previewYouTube()">
+          <div class="field-hint">Paste any YouTube link — watch, shorts, or embed URL.</div>
+          <div class="preview" id="clip-preview"></div>
+        </div>
+
+        <button class="btn btn-yellow" id="clip-btn" onclick="addClip()">Add Clip</button>
+        <div class="status" id="clip-status"></div>
+        <div class="deploy-note">After saving, Netlify will redeploy automatically — live in ~30 seconds.</div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ─── Config ─────────────────────────────────────────
+    const ADMIN_PASSWORD = 'brdo-admin'; // Change this to whatever you like
+    const REPO = 'nsppinc1/brdo-podcast';
+    const DATA_FILE = 'data.json';
+    const API = 'https://api.github.com';
+
+    // ─── Auth ────────────────────────────────────────────
+    function checkPassword() {
+      const pw = document.getElementById('pw-input').value;
+      if (pw === ADMIN_PASSWORD) {
+        sessionStorage.setItem('brdo-auth', '1');
+        showApp();
+      } else {
+        const err = document.getElementById('pw-error');
+        err.textContent = 'Incorrect password.';
+        err.style.display = 'block';
+      }
+    }
+
+    document.getElementById('pw-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    function logout() {
+      sessionStorage.removeItem('brdo-auth');
+      location.reload();
+    }
+
+    function showApp() {
+      document.getElementById('pw-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      loadCounts();
+      updateTokenStatus();
+      prefillEpNumber();
+    }
+
+    if (sessionStorage.getItem('brdo-auth') === '1') showApp();
+
+    // ─── Token management ────────────────────────────────
+    function getToken() { return localStorage.getItem('brdo-gh-token') || ''; }
+
+    function saveToken() {
+      const t = document.getElementById('gh-token').value.trim();
+      if (!t) return;
+      localStorage.setItem('brdo-gh-token', t);
+      document.getElementById('gh-token').value = '';
+      updateTokenStatus();
+      alert('Token saved.');
+    }
+
+    function clearToken() {
+      localStorage.removeItem('brdo-gh-token');
+      updateTokenStatus();
+    }
+
+    function updateTokenStatus() {
+      const badge = document.getElementById('token-status-badge');
+      if (getToken()) {
+        badge.innerHTML = '<span class="token-status ok">Token saved in browser</span>';
+      } else {
+        badge.innerHTML = '<span class="token-status missing">No token — add one below to enable saving</span>';
+      }
+    }
+
+    // ─── GitHub API helpers ──────────────────────────────
+    async function getDataFile() {
+      const res = await fetch(`${API}/repos/${REPO}/contents/${DATA_FILE}`, {
+        headers: { Authorization: 'token ' + getToken(), Accept: 'application/vnd.github.v3+json' }
+      });
+      if (!res.ok) throw new Error('Failed to fetch data.json from GitHub (status ' + res.status + ')');
+      return res.json(); // { content (base64), sha, ... }
+    }
+
+    async function putDataFile(data, sha, message) {
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+      const res = await fetch(`${API}/repos/${REPO}/contents/${DATA_FILE}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: 'token ' + getToken(),
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message, content, sha })
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.message || 'GitHub API error ' + res.status);
+      }
+      return res.json();
+    }
+
+    function parseDataContent(fileObj) {
+      const raw = decodeURIComponent(escape(atob(fileObj.content.replace(/\n/g, ''))));
+      return JSON.parse(raw);
+    }
+
+    // ─── Load counts ────────────────────────────────────
+    async function loadCounts() {
+      try {
+        const r = await fetch('./data.json');
+        const d = await r.json();
+        document.getElementById('counts-badge').textContent =
+          d.episodes.length + ' episodes · ' + d.clips.length + ' clips';
+        // Pre-fill episode number
+        const next = Math.max(...d.episodes.map(e => parseInt(e.num, 10))) + 1;
+        document.getElementById('ep-num').value = String(next).padStart(3, '0');
+      } catch(e) {
+        document.getElementById('counts-badge').textContent = 'Could not load counts';
+      }
+    }
+
+    function prefillEpNumber() { /* handled in loadCounts */ }
+
+    // ─── Spotify ID extraction ───────────────────────────
+    function extractSpotifyId(url) {
+      url = url.trim();
+      // Match episode ID in any Spotify URL format
+      const m = url.match(/episode\/([A-Za-z0-9]+)/);
+      if (m) return m[1];
+      // If it's just a bare ID (22 chars, alphanumeric)
+      if (/^[A-Za-z0-9]{20,30}$/.test(url)) return url;
+      return null;
+    }
+
+    function previewSpotify() {
+      const id = extractSpotifyId(document.getElementById('ep-url').value);
+      const el = document.getElementById('ep-preview');
+      el.textContent = id ? '✓ ID: ' + id : '';
+    }
+
+    // ─── YouTube ID extraction ───────────────────────────
+    function extractYouTubeId(url) {
+      url = url.trim();
+      let m;
+      // youtube.com/watch?v=ID or youtu.be/ID or /embed/ID or /shorts/ID
+      m = url.match(/(?:v=|\/embed\/|\/shorts\/|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+      if (m) return m[1];
+      // bare ID
+      if (/^[A-Za-z0-9_-]{11}$/.test(url)) return url;
+      return null;
+    }
+
+    function previewYouTube() {
+      const id = extractYouTubeId(document.getElementById('clip-url').value);
+      const el = document.getElementById('clip-preview');
+      el.textContent = id ? '✓ ID: ' + id : '';
+    }
+
+    // ─── Add Episode ─────────────────────────────────────
+    async function addEpisode() {
+      const statusEl = document.getElementById('ep-status');
+      const btn = document.getElementById('ep-btn');
+
+      if (!getToken()) {
+        setStatus(statusEl, 'error', 'No GitHub token saved. Add one in the GitHub Token section above.');
+        return;
+      }
+
+      const numRaw = document.getElementById('ep-num').value.trim();
+      const num = numRaw.padStart(3, '0');
+      const spotifyId = extractSpotifyId(document.getElementById('ep-url').value);
+
+      if (!num || isNaN(parseInt(num))) {
+        setStatus(statusEl, 'error', 'Please enter a valid episode number.');
+        return;
+      }
+      if (!spotifyId) {
+        setStatus(statusEl, 'error', 'Could not extract a Spotify episode ID from that URL.');
+        return;
+      }
+
+      btn.disabled = true;
+      setStatus(statusEl, 'loading', 'Saving to GitHub…');
+
+      try {
+        const fileObj = await getDataFile();
+        const data = parseDataContent(fileObj);
+
+        // Check for duplicate
+        if (data.episodes.some(e => e.num === num)) {
+          setStatus(statusEl, 'error', 'Episode ' + num + ' already exists in data.json.');
+          btn.disabled = false;
+          return;
+        }
+
+        // Prepend new episode
+        data.episodes.unshift({ num, spotifyId });
+
+        await putDataFile(data, fileObj.sha, 'Add episode ' + num);
+        setStatus(statusEl, 'success', '✓ Episode ' + num + ' added! Netlify is redeploying — live in ~30 seconds.');
+
+        // Update UI
+        document.getElementById('ep-num').value = String(parseInt(num) + 1).padStart(3, '0');
+        document.getElementById('ep-url').value = '';
+        document.getElementById('ep-preview').textContent = '';
+        document.getElementById('counts-badge').textContent = data.episodes.length + ' episodes · ' + data.clips.length + ' clips';
+      } catch(err) {
+        setStatus(statusEl, 'error', 'Error: ' + err.message);
+      }
+
+      btn.disabled = false;
+    }
+
+    // ─── Add Clip ─────────────────────────────────────────
+    async function addClip() {
+      const statusEl = document.getElementById('clip-status');
+      const btn = document.getElementById('clip-btn');
+
+      if (!getToken()) {
+        setStatus(statusEl, 'error', 'No GitHub token saved. Add one in the GitHub Token section above.');
+        return;
+      }
+
+      const youtubeId = extractYouTubeId(document.getElementById('clip-url').value);
+      if (!youtubeId) {
+        setStatus(statusEl, 'error', 'Could not extract a YouTube video ID from that URL.');
+        return;
+      }
+
+      btn.disabled = true;
+      setStatus(statusEl, 'loading', 'Saving to GitHub…');
+
+      try {
+        const fileObj = await getDataFile();
+        const data = parseDataContent(fileObj);
+
+        // Check for duplicate
+        if (data.clips.includes(youtubeId)) {
+          setStatus(statusEl, 'error', 'That clip already exists in data.json.');
+          btn.disabled = false;
+          return;
+        }
+
+        // Prepend new clip
+        data.clips.unshift(youtubeId);
+
+        await putDataFile(data, fileObj.sha, 'Add clip ' + youtubeId);
+        setStatus(statusEl, 'success', '✓ Clip added! Netlify is redeploying — live in ~30 seconds.');
+
+        document.getElementById('clip-url').value = '';
+        document.getElementById('clip-preview').textContent = '';
+        document.getElementById('counts-badge').textContent = data.episodes.length + ' episodes · ' + data.clips.length + ' clips';
+      } catch(err) {
+        setStatus(statusEl, 'error', 'Error: ' + err.message);
+      }
+
+      btn.disabled = false;
+    }
+
+    // ─── Helpers ─────────────────────────────────────────
+    function setStatus(el, type, msg) {
+      el.className = 'status ' + type;
+      el.textContent = msg;
+    }
+  </script>
+
+</body>
+</html>

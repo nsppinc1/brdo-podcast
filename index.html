@@ -1052,42 +1052,10 @@
         <a href="episodes.html" class="btn btn-dark reveal delay-2">All Episodes →</a>
       </div>
 
-      <div class="episode-grid">
-
-        <div class="episode-card reveal">
-          <div class="ep-tag">Latest</div>
-          <div class="ep-number">030</div>
-          <div class="ep-title">Our Most Recent Episode</div>
-          <div class="ep-desc">Fresh off the press. Barely researched, deeply opinionated — exactly as advertised. Available on all platforms now.</div>
-          <a href="episodes.html#ep-030" class="ep-play" aria-label="Watch Episode 030">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </a>
-        </div>
-
-        <div class="episode-card reveal delay-1">
-          <div class="ep-tag">Previous</div>
-          <div class="ep-number">029</div>
-          <div class="ep-title">Last Week's Takes</div>
-          <div class="ep-desc">We went in with one question and came out with six more. Classic BRDO. Find it anywhere you get your podcasts.</div>
-          <a href="episodes.html#ep-029" class="ep-play" aria-label="Watch Episode 029">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </a>
-        </div>
-
-        <div class="episode-card reveal delay-2">
-          <div class="ep-tag">Classic</div>
-          <div class="ep-number">028</div>
-          <div class="ep-title">Another Banger from the Vault</div>
-          <div class="ep-desc">Every episode: a fresh topic, two perspectives, zero preparation. Start anywhere — you can't go wrong.</div>
-          <a href="episodes.html#ep-028" class="ep-play" aria-label="Watch Episode 028">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </a>
-        </div>
-
-      </div>
+      <div class="episode-grid" id="home-episode-grid"></div>
 
       <div class="episodes-footer reveal">
-        <p>30 episodes and counting. Start from the beginning or dive right in — either works.</p>
+        <p id="home-ep-count">Loading episodes…</p>
         <a href="episodes.html" class="btn btn-dark">Browse the Full Archive</a>
       </div>
     </div>
@@ -1107,33 +1075,7 @@
         </div>
       </div>
 
-      <div class="clips-grid">
-
-        <div class="clip-card reveal">
-          <div class="clip-thumb">
-            <iframe src="https://www.youtube.com/embed/wGsXo5x0KAI" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" loading="lazy" title="BRDO Short"></iframe>
-          </div>
-        </div>
-
-        <div class="clip-card reveal delay-1">
-          <div class="clip-thumb">
-            <iframe src="https://www.youtube.com/embed/vqKCPF6vD70" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" loading="lazy" title="BRDO Short"></iframe>
-          </div>
-        </div>
-
-        <div class="clip-card reveal delay-2">
-          <div class="clip-thumb">
-            <iframe src="https://www.youtube.com/embed/R1NjEXwaWeA" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" loading="lazy" title="BRDO Short"></iframe>
-          </div>
-        </div>
-
-        <div class="clip-card reveal delay-3">
-          <div class="clip-thumb">
-            <iframe src="https://www.youtube.com/embed/rzD911Fzkio" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" loading="lazy" title="BRDO Short"></iframe>
-          </div>
-        </div>
-
-      </div>
+      <div class="clips-grid" id="home-clips-grid"></div>
 
       <div class="clips-cta reveal">
         <a href="clips.html" class="btn btn-yellow">All Clips →</a>
@@ -1302,6 +1244,52 @@ function handleSubmit(e) {
       const y = (e.clientY / window.innerHeight - 0.5) * 8;
       icons.style.transform = `translate(${x}px, ${y}px)`;
     }, { passive: true });
+
+    // ─── Load recent episodes + clips from data.json ───
+    const EP_TAGS = ['Latest', 'Previous', 'Classic'];
+    const EP_DESCS = [
+      'Fresh off the press. Barely researched, deeply opinionated — exactly as advertised. Available on all platforms now.',
+      'We went in with one question and came out with six more. Classic BRDO. Find it anywhere you get your podcasts.',
+      'Every episode: a fresh topic, two perspectives, zero preparation. Start anywhere — you can\'t go wrong.'
+    ];
+
+    fetch('./data.json')
+      .then(r => r.json())
+      .then(data => {
+        // Recent Episodes (top 3)
+        const epGrid = document.getElementById('home-episode-grid');
+        const epCount = document.getElementById('home-ep-count');
+        const delays = ['', ' delay-1', ' delay-2'];
+        data.episodes.slice(0, 3).forEach((ep, i) => {
+          const card = document.createElement('div');
+          card.className = 'episode-card reveal' + delays[i];
+          card.innerHTML =
+            '<div class="ep-tag">' + EP_TAGS[i] + '</div>' +
+            '<div class="ep-number">' + ep.num + '</div>' +
+            '<div class="ep-title">Episode ' + ep.num + '</div>' +
+            '<div class="ep-desc">' + EP_DESCS[i] + '</div>' +
+            '<a href="episodes.html#ep-' + ep.num + '" class="ep-play" aria-label="Watch Episode ' + ep.num + '">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>' +
+            '</a>';
+          epGrid.appendChild(card);
+        });
+        epCount.textContent = data.episodes.length + ' episodes and counting. Start from the beginning or dive right in — either works.';
+
+        // Recent Clips (top 4)
+        const clipGrid = document.getElementById('home-clips-grid');
+        data.clips.slice(0, 4).forEach((id, i) => {
+          const card = document.createElement('div');
+          card.className = 'clip-card reveal' + (i > 0 ? ' delay-' + i : '');
+          card.innerHTML =
+            '<div class="clip-thumb">' +
+              '<iframe src="https://www.youtube.com/embed/' + id + '"' +
+              ' style="position:absolute;inset:0;width:100%;height:100%;border:none;"' +
+              ' allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"' +
+              ' loading="lazy" title="BRDO Short"></iframe>' +
+            '</div>';
+          clipGrid.appendChild(card);
+        });
+      });
   </script>
 </body>
 </html>
