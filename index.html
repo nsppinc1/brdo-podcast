@@ -1272,6 +1272,7 @@ function handleSubmit(e) {
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>' +
             '</a>';
           epGrid.appendChild(card);
+          revealObserver.observe(card);
         });
         epCount.textContent = data.episodes.length + ' episodes and counting. Start from the beginning or dive right in — either works.';
 
@@ -1288,6 +1289,7 @@ function handleSubmit(e) {
               ' loading="lazy" title="BRDO Short"></iframe>' +
             '</div>';
           clipGrid.appendChild(card);
+          revealObserver.observe(card);
         });
       });
   </script>
