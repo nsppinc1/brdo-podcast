@@ -555,6 +555,41 @@
       margin-bottom: 1.5rem;
     }
 
+    /* ─── POLL ───────────────────────────────────────── */
+    #poll {
+      background: var(--cream-mid);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .poll-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .poll-inner .section-label { margin-bottom: 0.75rem; }
+    .poll-inner .section-title { margin-bottom: 1rem; color: var(--dark); }
+
+    .poll-inner p {
+      font-family: var(--font-body);
+      font-style: italic;
+      color: rgba(26,18,9,0.6);
+      margin-bottom: 2rem;
+    }
+
+    .poll-embed {
+      border: 3px solid var(--dark);
+      background: white;
+      overflow: hidden;
+      box-shadow: 6px 6px 0 var(--dark);
+    }
+
+    .poll-embed iframe {
+      width: 100%;
+      border: none;
+      display: block;
+    }
+
     /* ─── NEWSLETTER ─────────────────────────────────── */
     #newsletter {
       background: var(--yellow);
@@ -912,6 +947,7 @@
       <li><a href="#listen">Listen</a></li>
       <li><a href="#episodes">Episodes</a></li>
       <li><a href="#clips">Clips</a></li>
+      <li><a href="#poll">Poll</a></li>
       <li><a href="#newsletter">Subscribe</a></li>
     </ul>
   </nav>
@@ -1080,6 +1116,18 @@
       <div class="clips-cta reveal">
         <a href="clips.html" class="btn btn-yellow">All Clips →</a>
         <a href="https://www.youtube.com/@brdopodcast" class="btn btn-outline" style="border-color:rgba(245,194,22,0.4);color:var(--cream);" target="_blank" rel="noopener">More on YouTube →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ POLL ═════════════════════════════════════════ -->
+  <section id="poll">
+    <div class="poll-inner">
+      <div class="section-label reveal">Have Your Say</div>
+      <h2 class="section-title reveal">This Week's Poll</h2>
+      <p class="reveal">We ask the questions. You settle the debate.</p>
+      <div class="poll-embed reveal">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdu1sfN8HhDLtacorrVV2tcvZAM-fhfnl-Qeoget_wSEpm3Pw/viewform?embedded=true" height="424" loading="lazy" title="BRDO Weekly Poll">Loading…</iframe>
       </div>
     </div>
   </section>
