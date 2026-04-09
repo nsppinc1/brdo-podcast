@@ -110,7 +110,7 @@ export default {
     // ── POST /publish ─────────────────────────────────────
     // Creates a post on Buffer for each selected channel
     if (request.method === 'POST' && url.pathname === '/publish') {
-      const { channelIds, text, videoUrl, thumbnailUrl, title } = await request.json();
+      const { channelIds, text, videoUrl, thumbnailUrl, title, igType } = await request.json();
 
       if (!channelIds?.length) return json({ error: 'No channels selected' }, 400, origin);
       if (!text)               return json({ error: 'Caption is required' },  400, origin);
@@ -143,7 +143,7 @@ export default {
               }]
             },
             metadata: {
-              instagram: { type: 'reel' }
+              instagram: { type: igType || 'reel' }
             }
           }
         }, env.BUFFER_API_KEY)

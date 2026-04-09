@@ -220,6 +220,20 @@
     .resource-info { flex: 1; }
     .resource-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--yellow); margin-bottom: 0.5rem; }
     .resource-desc { font-size: 0.9rem; color: rgba(255,248,225,0.6); line-height: 1.5; }
+    .type-btn {
+      display: block; text-align: center;
+      padding: 0.6rem 1rem;
+      border: 2px solid rgba(245,194,22,0.2);
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(255,248,225,0.4); cursor: pointer;
+      transition: all 0.15s;
+    }
+    input[type="radio"]:checked + .type-btn {
+      border-color: var(--yellow); color: var(--yellow);
+      background: rgba(245,194,22,0.08);
+    }
+    .type-option:hover .type-btn { border-color: rgba(245,194,22,0.5); color: rgba(255,248,225,0.7); }
+
     .btn-open {
       display: inline-flex; align-items: center; gap: 0.5rem;
       padding: 0.85rem 1.75rem;
@@ -428,6 +442,24 @@
             <label for="post-hashtags">Hashtags</label>
             <input type="text" id="post-hashtags" placeholder="#brdo #podcast #comedy">
             <div class="field-hint">Added to the end of your caption automatically.</div>
+          </div>
+
+          <div class="field">
+            <label>Instagram Post Type</label>
+            <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
+              <label class="type-option" style="flex:1;">
+                <input type="radio" name="ig-type" value="reel" checked style="display:none;">
+                <span class="type-btn">Reel</span>
+              </label>
+              <label class="type-option" style="flex:1;">
+                <input type="radio" name="ig-type" value="post" style="display:none;">
+                <span class="type-btn">Post</span>
+              </label>
+              <label class="type-option" style="flex:1;">
+                <input type="radio" name="ig-type" value="story" style="display:none;">
+                <span class="type-btn">Story</span>
+              </label>
+            </div>
           </div>
 
           <div class="field">
@@ -832,6 +864,7 @@
       const caption    = document.getElementById('post-caption').value.trim();
       const hashtags   = document.getElementById('post-hashtags').value.trim();
       const title      = document.getElementById('post-title').value.trim();
+      const igType     = document.querySelector('input[name="ig-type"]:checked').value;
       const fullText   = hashtags ? `${caption}\n\n${hashtags}` : caption;
 
       if (!selectedFile)      { setStatus(statusEl, 'error', 'Please select a video file.'); return; }
@@ -854,7 +887,7 @@
         const pubRes  = await fetch(`${WORKER_URL}/publish`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ channelIds, text: fullText, videoUrl: uploadData.url, title: title || undefined })
+          body: JSON.stringify({ channelIds, text: fullText, videoUrl: uploadData.url, title: title || undefined, igType })
         });
         const pubData = await pubRes.json();
 
