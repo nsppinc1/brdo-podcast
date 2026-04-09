@@ -143,7 +143,10 @@ export default {
               }]
             },
             metadata: {
-              instagram: { type: igType || 'reel' }
+              instagram: {
+                type: igType || 'reel',
+                shouldShareToFeed: igType !== 'story'
+              }
             }
           }
         }, env.BUFFER_API_KEY)
