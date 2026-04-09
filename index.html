@@ -1011,7 +1011,7 @@
 
       <div class="about-image reveal delay-2">
         <img src="./BRDO Thumbnail.png" alt="BRDO Podcast — Barely Researched, Deeply Opinionated">
-        <div class="about-badge">Ep. 030 &amp; Counting</div>
+        <div class="about-badge" id="about-badge">Ep. 031 &amp; Counting</div>
       </div>
     </div>
   </section>
@@ -1329,6 +1329,8 @@ function handleSubmit(e) {
         epCount.textContent = data.episodes.length + ' episodes and counting. Start from the beginning or dive right in — either works.';
         const statEl = document.getElementById('stat-episode-count');
         if (statEl) statEl.textContent = data.episodes.length + '+';
+        const badgeEl = document.getElementById('about-badge');
+        if (badgeEl) badgeEl.textContent = 'Ep. ' + String(data.episodes.length).padStart(3, '0') + ' & Counting';
 
         // Recent Clips (top 4)
         const clipGrid = document.getElementById('home-clips-grid');
