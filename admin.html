@@ -271,6 +271,7 @@
       <button class="tab-btn" data-tab="mailing">Mailing List</button>
       <button class="tab-btn" data-tab="poll">Poll</button>
       <button class="tab-btn" data-tab="analytics">Analytics</button>
+      <button class="tab-btn" data-tab="publish">Publish</button>
     </nav>
 
     <!-- ── Episodes ──────────────────────────────────── -->
@@ -394,6 +395,52 @@
             Open Analytics ↗
           </a>
         </div>
+      </div>
+    </div>
+
+    <!-- ── Publish ──────────────────────────────────── -->
+    <div class="tab-panel" id="tab-publish">
+      <div class="panel-inner">
+
+        <div class="card">
+          <div class="card-title">Publish Clip to Social</div>
+
+          <div class="field">
+            <label>Video File</label>
+            <div id="drop-zone" style="border:2px dashed rgba(245,194,22,0.3);padding:2rem;text-align:center;cursor:pointer;transition:border-color 0.2s;">
+              <div id="drop-label" style="font-size:0.85rem;color:rgba(255,248,225,0.4);">Drop video here or click to select</div>
+              <input type="file" id="video-file" accept="video/*" style="display:none;">
+            </div>
+            <div id="video-preview" style="margin-top:0.75rem;font-size:0.78rem;color:var(--green);font-weight:700;"></div>
+          </div>
+
+          <div class="field">
+            <label for="post-title">Title <span style="font-weight:400;text-transform:none;letter-spacing:0;color:rgba(255,248,225,0.25);">— YouTube only</span></label>
+            <input type="text" id="post-title" placeholder="Ep. 031 — Topic name">
+          </div>
+
+          <div class="field">
+            <label for="post-caption">Caption</label>
+            <textarea id="post-caption" rows="4" placeholder="Write your caption here…" style="width:100%;background:rgba(255,255,255,0.04);border:2px solid rgba(245,194,22,0.2);color:var(--cream);font-family:var(--font-ui);font-size:0.95rem;padding:0.75rem 1rem;outline:none;resize:vertical;transition:border-color 0.2s;"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="post-hashtags">Hashtags</label>
+            <input type="text" id="post-hashtags" placeholder="#brdo #podcast #comedy">
+            <div class="field-hint">Added to the end of your caption automatically.</div>
+          </div>
+
+          <div class="field">
+            <label>Post To</label>
+            <div id="channel-list" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.25rem;">
+              <div style="font-size:0.82rem;color:rgba(255,248,225,0.3);">Loading channels…</div>
+            </div>
+          </div>
+
+          <button class="btn btn-yellow" id="publish-btn" style="margin-top:0.5rem;">Publish Now</button>
+          <div class="status" id="publish-status"></div>
+        </div>
+
       </div>
     </div>
 
@@ -717,6 +764,121 @@
         document.getElementById('clip-preview').textContent = '';
         await loadData();
       } catch(err) { setStatus(statusEl, 'error', 'Error: ' + err.message); }
+      btn.disabled = false;
+    });
+
+    // ─── Publish tab ──────────────────────────────────────
+    const WORKER_URL = 'https://brdo-buffer-worker.pjpanigi.workers.dev';
+    let selectedFile = null;
+    let channelsData = [];
+
+    // Load channels when Publish tab is first opened
+    const publishTabBtn = document.querySelector('[data-tab="publish"]');
+    let channelsLoaded = false;
+    publishTabBtn.addEventListener('click', () => {
+      if (!channelsLoaded) { loadChannels(); channelsLoaded = true; }
+    });
+
+    async function loadChannels() {
+      const container = document.getElementById('channel-list');
+      try {
+        const res = await fetch(`${WORKER_URL}/channels`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        channelsData = data.channels;
+        container.innerHTML = data.channels.map(ch => `
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;border:1.5px solid rgba(245,194,22,0.2);font-size:0.82rem;">
+            <input type="checkbox" value="${ch.id}" checked style="accent-color:var(--yellow);">
+            ${serviceIcon(ch.service)} ${ch.displayName || ch.name}
+          </label>`).join('');
+      } catch(e) {
+        container.innerHTML = `<div style="font-size:0.82rem;color:#e57373;">Could not load channels: ${e.message}</div>`;
+      }
+    }
+
+    function serviceIcon(service) {
+      const icons = { instagram: '📷', youtube: '▶', tiktok: '♪', facebook: 'f', twitter: '𝕏', threads: '⊕' };
+      return icons[service] || '●';
+    }
+
+    // Drop zone
+    const dropZone  = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('video-file');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = 'var(--yellow)'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'rgba(245,194,22,0.3)'; });
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'rgba(245,194,22,0.3)';
+      if (e.dataTransfer.files[0]) setVideoFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) setVideoFile(fileInput.files[0]); });
+
+    function setVideoFile(file) {
+      selectedFile = file;
+      const mb = (file.size / 1024 / 1024).toFixed(1);
+      document.getElementById('drop-label').textContent = file.name;
+      document.getElementById('drop-label').style.color = 'var(--cream)';
+      document.getElementById('video-preview').textContent = `✓ ${mb} MB · ${file.type}`;
+    }
+
+    // Publish
+    document.getElementById('publish-btn').addEventListener('click', async () => {
+      const statusEl = document.getElementById('publish-status');
+      const btn      = document.getElementById('publish-btn');
+
+      const channelIds = [...document.querySelectorAll('#channel-list input:checked')].map(i => i.value);
+      const caption    = document.getElementById('post-caption').value.trim();
+      const hashtags   = document.getElementById('post-hashtags').value.trim();
+      const title      = document.getElementById('post-title').value.trim();
+      const fullText   = hashtags ? `${caption}\n\n${hashtags}` : caption;
+
+      if (!selectedFile)      { setStatus(statusEl, 'error', 'Please select a video file.'); return; }
+      if (!caption)           { setStatus(statusEl, 'error', 'Caption is required.'); return; }
+      if (!channelIds.length) { setStatus(statusEl, 'error', 'Select at least one platform.'); return; }
+
+      btn.disabled = true;
+      setStatus(statusEl, 'loading', 'Uploading video…');
+
+      try {
+        // 1 — upload video to R2
+        const form = new FormData();
+        form.append('video', selectedFile);
+        const uploadRes  = await fetch(`${WORKER_URL}/upload`, { method: 'POST', body: form });
+        const uploadData = await uploadRes.json();
+        if (uploadData.error) throw new Error(uploadData.error);
+
+        // 2 — publish via Buffer
+        setStatus(statusEl, 'loading', 'Publishing to Buffer…');
+        const pubRes  = await fetch(`${WORKER_URL}/publish`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelIds, text: fullText, videoUrl: uploadData.url, title: title || undefined })
+        });
+        const pubData = await pubRes.json();
+
+        const successCount = pubData.successes?.length || 0;
+        const errorCount   = pubData.errors?.length || 0;
+
+        if (successCount > 0 && errorCount === 0) {
+          setStatus(statusEl, 'success', `✓ Published to ${successCount} platform${successCount > 1 ? 's' : ''}!`);
+          document.getElementById('post-caption').value  = '';
+          document.getElementById('post-hashtags').value = '';
+          document.getElementById('post-title').value    = '';
+          document.getElementById('drop-label').textContent = 'Drop video here or click to select';
+          document.getElementById('drop-label').style.color = 'rgba(255,248,225,0.4)';
+          document.getElementById('video-preview').textContent = '';
+          selectedFile = null;
+        } else if (successCount > 0 && errorCount > 0) {
+          setStatus(statusEl, 'success', `✓ Published to ${successCount} platform${successCount > 1 ? 's' : ''}, but ${errorCount} failed: ${pubData.errors.map(e => e.error).join(', ')}`);
+        } else {
+          throw new Error(pubData.errors?.map(e => e.error).join(', ') || 'Unknown error');
+        }
+      } catch(err) {
+        setStatus(statusEl, 'error', 'Error: ' + err.message);
+      }
+
       btn.disabled = false;
     });
 
