@@ -968,7 +968,7 @@
         <img class="mic-svg mic-left" src="./mic_left.png" alt="Microphone">
 
         <!-- Coffee cup -->
-        <img class="cup-svg" src="./mug.png" alt="Coffee cup">
+        <img class="cup-svg" src="./mug.png" alt="Coffee cup" id="secret-mug">
 
         <!-- Right microphone -->
         <img class="mic-svg mic-right" src="./mic_right.png" alt="Microphone">
@@ -1348,6 +1348,9 @@ function handleSubmit(e) {
           revealObserver.observe(card);
         });
       });
+    document.getElementById('secret-mug').addEventListener('dblclick', () => {
+      window.location.href = './admin.html';
+    });
   </script>
 </body>
 </html>
