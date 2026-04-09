@@ -1,0 +1,7 @@
+name = "brdo-buffer-worker"
+main = "buffer-worker.js"
+compatibility_date = "2026-04-09"
+
+[[r2_buckets]]
+binding = "CLIPS_BUCKET"
+bucket_name = "brdo-clips"

@@ -820,7 +820,7 @@
         channelsData = data.channels;
         container.innerHTML = data.channels.map(ch => `
           <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;padding:0.5rem 0.75rem;border:1.5px solid rgba(245,194,22,0.2);font-size:0.82rem;">
-            <input type="checkbox" value="${ch.id}" checked style="accent-color:var(--yellow);">
+            <input type="checkbox" value="${ch.id}" data-service="${ch.service}" checked style="accent-color:var(--yellow);">
             ${serviceIcon(ch.service)} ${ch.displayName || ch.name}
           </label>`).join('');
       } catch(e) {
@@ -860,16 +860,16 @@
       const statusEl = document.getElementById('publish-status');
       const btn      = document.getElementById('publish-btn');
 
-      const channelIds = [...document.querySelectorAll('#channel-list input:checked')].map(i => i.value);
+      const channels   = [...document.querySelectorAll('#channel-list input:checked')].map(i => ({ id: i.value, service: i.dataset.service }));
       const caption    = document.getElementById('post-caption').value.trim();
       const hashtags   = document.getElementById('post-hashtags').value.trim();
       const title      = document.getElementById('post-title').value.trim();
       const igType     = document.querySelector('input[name="ig-type"]:checked').value;
       const fullText   = hashtags ? `${caption}\n\n${hashtags}` : caption;
 
-      if (!selectedFile)      { setStatus(statusEl, 'error', 'Please select a video file.'); return; }
-      if (!caption)           { setStatus(statusEl, 'error', 'Caption is required.'); return; }
-      if (!channelIds.length) { setStatus(statusEl, 'error', 'Select at least one platform.'); return; }
+      if (!selectedFile)    { setStatus(statusEl, 'error', 'Please select a video file.'); return; }
+      if (!caption)         { setStatus(statusEl, 'error', 'Caption is required.'); return; }
+      if (!channels.length) { setStatus(statusEl, 'error', 'Select at least one platform.'); return; }
 
       btn.disabled = true;
       setStatus(statusEl, 'loading', 'Uploading video…');
@@ -887,7 +887,7 @@
         const pubRes  = await fetch(`${WORKER_URL}/publish`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ channelIds, text: fullText, videoUrl: uploadData.url, title: title || undefined, igType })
+          body: JSON.stringify({ channels, text: fullText, videoUrl: uploadData.url, title: title || undefined, igType })
         });
         const pubData = await pubRes.json();
 

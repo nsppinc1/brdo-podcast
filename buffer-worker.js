@@ -52,6 +52,16 @@ export default {
       return new Response(null, { status: 204, headers: cors(origin) });
     }
 
+    try {
+      return await handle(request, env, origin, url);
+    } catch (err) {
+      return json({ error: err.message || 'Internal server error' }, 500, origin);
+    }
+  }
+};
+
+async function handle(request, env, origin, url) {
+
     // ── GET /channels ─────────────────────────────────────
     // Returns org ID and all connected channels
     if (request.method === 'GET' && url.pathname === '/channels') {
@@ -110,11 +120,11 @@ export default {
     // ── POST /publish ─────────────────────────────────────
     // Creates a post on Buffer for each selected channel
     if (request.method === 'POST' && url.pathname === '/publish') {
-      const { channelIds, text, videoUrl, thumbnailUrl, title, igType } = await request.json();
+      const { channels, text, videoUrl, thumbnailUrl, title, igType } = await request.json();
 
-      if (!channelIds?.length) return json({ error: 'No channels selected' }, 400, origin);
-      if (!text)               return json({ error: 'Caption is required' },  400, origin);
-      if (!videoUrl)           return json({ error: 'No video URL provided' }, 400, origin);
+      if (!channels?.length) return json({ error: 'No channels selected' }, 400, origin);
+      if (!text)             return json({ error: 'Caption is required' },  400, origin);
+      if (!videoUrl)         return json({ error: 'No video URL provided' }, 400, origin);
 
       const mutation = `
         mutation CreatePost($input: CreatePostInput!) {
@@ -128,8 +138,11 @@ export default {
           }
         }`;
 
-      const results = await Promise.all(channelIds.map(channelId =>
-        gql(mutation, {
+      const results = await Promise.all(channels.map(({ id: channelId, service }) => {
+        const metadata = service === 'instagram'
+          ? { instagram: { type: igType || 'reel', shouldShareToFeed: igType !== 'story' } }
+          : undefined;
+        return gql(mutation, {
           input: {
             text,
             channelId,
@@ -142,32 +155,26 @@ export default {
                 ...(title && { metadata: { title } })
               }]
             },
-            metadata: {
-              instagram: {
-                type: igType || 'reel',
-                shouldShareToFeed: igType !== 'story'
-              }
-            }
+            ...(metadata && { metadata })
           }
-        }, env.BUFFER_API_KEY)
-      ));
+        }, env.BUFFER_API_KEY);
+      }));
 
       const errors = results
         .map((r, i) => {
-          if (r.errors?.length)              return { channelId: channelIds[i], error: r.errors[0].message };
-          if (r.data?.createPost?.message)   return { channelId: channelIds[i], error: r.data.createPost.message };
-          if (!r.data?.createPost?.post)     return { channelId: channelIds[i], error: 'No post returned', raw: JSON.stringify(r) };
+          if (r.errors?.length)              return { channelId: channels[i].id, error: r.errors[0].message };
+          if (r.data?.createPost?.message)   return { channelId: channels[i].id, error: r.data.createPost.message };
+          if (!r.data?.createPost?.post)     return { channelId: channels[i].id, error: 'No post returned', raw: JSON.stringify(r) };
           return null;
         })
         .filter(Boolean);
 
       const successes = results
-        .map((r, i) => r.data?.createPost?.post ? { channelId: channelIds[i], postId: r.data.createPost.post.id } : null)
+        .map((r, i) => r.data?.createPost?.post ? { channelId: channels[i].id, postId: r.data.createPost.post.id } : null)
         .filter(Boolean);
 
       return json({ successes, errors }, 200, origin);
     }
 
-    return json({ error: 'Not found' }, 404, origin);
-  }
-};
+  return json({ error: 'Not found' }, 404, origin);
+}
