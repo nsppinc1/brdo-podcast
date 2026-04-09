@@ -141,6 +141,9 @@ export default {
                 ...(thumbnailUrl && { thumbnailUrl }),
                 ...(title && { metadata: { title } })
               }]
+            },
+            metadata: {
+              instagram: { type: 'reel' }
             }
           }
         }, env.BUFFER_API_KEY)
