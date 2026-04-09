@@ -65,7 +65,7 @@ export default {
       if (!orgId) return json({ error: 'No organization found' }, 404, origin);
 
       const chanQuery = `
-        query GetChannels($orgId: String!) {
+        query GetChannels($orgId: OrganizationId!) {
           channels(input: { organizationId: $orgId, filter: { isLocked: false } }) {
             id name displayName service avatar
           }
