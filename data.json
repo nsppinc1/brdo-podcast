@@ -1,37 +1,134 @@
 {
   "episodes": [
-    { "num": "030", "spotifyId": "5hEx5OFJVXSa1DOtDunZHw" },
-    { "num": "029", "spotifyId": "2QA9naNdxtcqHJOVj2F40g" },
-    { "num": "028", "spotifyId": "3lyPuEa9m05iAIHUM6hCtc" },
-    { "num": "027", "spotifyId": "4nFKnJ1bS79ZC7DZ4Sjyom" },
-    { "num": "026", "spotifyId": "4a9QaQ9Zw5eDaxXBoQYsPJ" },
-    { "num": "025", "spotifyId": "6WLRqDnGNNGi9qrO91MIDX" },
-    { "num": "024", "spotifyId": "4zE5D0IneGBEFsdugOIvTv" },
-    { "num": "023", "spotifyId": "4xz9vvnDgEblYu8an34Guj" },
-    { "num": "022", "spotifyId": "6r7QyOPZ8y71DE5Jl4xNkw" },
-    { "num": "021", "spotifyId": "3RMJXLsGYQblibgem8lnQi" },
-    { "num": "020", "spotifyId": "68nDDthSatHBEa2cyljNp5" },
-    { "num": "019", "spotifyId": "3yhAWJIwD1MPjKm7JE3xde" },
-    { "num": "018", "spotifyId": "7yxG1qDpsD7k8MW6HBwKbd" },
-    { "num": "017", "spotifyId": "1eRUl8QGx0rBpbpsyOJZXh" },
-    { "num": "016", "spotifyId": "0YrsYbwcTQgmlXlg7U1EAz" },
-    { "num": "015", "spotifyId": "5c7Lr6d0NXPA2PDxo488Zs" },
-    { "num": "014", "spotifyId": "6Ueb1MUhGErOopUFE95sAd" },
-    { "num": "013", "spotifyId": "3QObn6pshXzxjzJyeM3mnU" },
-    { "num": "012", "spotifyId": "53oIBuXqpS0hE9i0IOF89G" },
-    { "num": "011", "spotifyId": "2SeRlnKXAXI3JzH6QxQar3" },
-    { "num": "010", "spotifyId": "21TRiY11CpRvL801qJMfGE" },
-    { "num": "009", "spotifyId": "4F1VMbXk72bYbPXNlHOua6" },
-    { "num": "008", "spotifyId": "4ZopQQB3pV1jf1g0nJ5vIn" },
-    { "num": "007", "spotifyId": "7FvI3g4IbKpf5uVBnwuFxx" },
-    { "num": "006", "spotifyId": "5zJdCyQPbX0MskWigPsCXE" },
-    { "num": "005", "spotifyId": "3PnK7c4YgAdgSqdLaEu2IK" },
-    { "num": "004", "spotifyId": "1MNorLiTl06RzyAgjurYvg" },
-    { "num": "003", "spotifyId": "11r1IKWfrtRKXrjuGJ1uAS" },
-    { "num": "002", "spotifyId": "0oC88DO4Z5C8TcFxMSQP86" },
-    { "num": "001", "spotifyId": "6DTkOJ1aqCzQYwx5qRw4SQ", "badge": "Where It All Began" }
+    {
+      "num": "031",
+      "spotifyId": "0O8pTQY9vwbPQICfEpkhz7"
+    },
+    {
+      "num": "030",
+      "spotifyId": "5hEx5OFJVXSa1DOtDunZHw"
+    },
+    {
+      "num": "029",
+      "spotifyId": "2QA9naNdxtcqHJOVj2F40g"
+    },
+    {
+      "num": "028",
+      "spotifyId": "3lyPuEa9m05iAIHUM6hCtc"
+    },
+    {
+      "num": "027",
+      "spotifyId": "4nFKnJ1bS79ZC7DZ4Sjyom"
+    },
+    {
+      "num": "026",
+      "spotifyId": "4a9QaQ9Zw5eDaxXBoQYsPJ"
+    },
+    {
+      "num": "025",
+      "spotifyId": "6WLRqDnGNNGi9qrO91MIDX"
+    },
+    {
+      "num": "024",
+      "spotifyId": "4zE5D0IneGBEFsdugOIvTv"
+    },
+    {
+      "num": "023",
+      "spotifyId": "4xz9vvnDgEblYu8an34Guj"
+    },
+    {
+      "num": "022",
+      "spotifyId": "6r7QyOPZ8y71DE5Jl4xNkw"
+    },
+    {
+      "num": "021",
+      "spotifyId": "3RMJXLsGYQblibgem8lnQi"
+    },
+    {
+      "num": "020",
+      "spotifyId": "68nDDthSatHBEa2cyljNp5"
+    },
+    {
+      "num": "019",
+      "spotifyId": "3yhAWJIwD1MPjKm7JE3xde"
+    },
+    {
+      "num": "018",
+      "spotifyId": "7yxG1qDpsD7k8MW6HBwKbd"
+    },
+    {
+      "num": "017",
+      "spotifyId": "1eRUl8QGx0rBpbpsyOJZXh"
+    },
+    {
+      "num": "016",
+      "spotifyId": "0YrsYbwcTQgmlXlg7U1EAz"
+    },
+    {
+      "num": "015",
+      "spotifyId": "5c7Lr6d0NXPA2PDxo488Zs"
+    },
+    {
+      "num": "014",
+      "spotifyId": "6Ueb1MUhGErOopUFE95sAd"
+    },
+    {
+      "num": "013",
+      "spotifyId": "3QObn6pshXzxjzJyeM3mnU"
+    },
+    {
+      "num": "012",
+      "spotifyId": "53oIBuXqpS0hE9i0IOF89G"
+    },
+    {
+      "num": "011",
+      "spotifyId": "2SeRlnKXAXI3JzH6QxQar3"
+    },
+    {
+      "num": "010",
+      "spotifyId": "21TRiY11CpRvL801qJMfGE"
+    },
+    {
+      "num": "009",
+      "spotifyId": "4F1VMbXk72bYbPXNlHOua6"
+    },
+    {
+      "num": "008",
+      "spotifyId": "4ZopQQB3pV1jf1g0nJ5vIn"
+    },
+    {
+      "num": "007",
+      "spotifyId": "7FvI3g4IbKpf5uVBnwuFxx"
+    },
+    {
+      "num": "006",
+      "spotifyId": "5zJdCyQPbX0MskWigPsCXE"
+    },
+    {
+      "num": "005",
+      "spotifyId": "3PnK7c4YgAdgSqdLaEu2IK"
+    },
+    {
+      "num": "004",
+      "spotifyId": "1MNorLiTl06RzyAgjurYvg"
+    },
+    {
+      "num": "003",
+      "spotifyId": "11r1IKWfrtRKXrjuGJ1uAS"
+    },
+    {
+      "num": "002",
+      "spotifyId": "0oC88DO4Z5C8TcFxMSQP86"
+    },
+    {
+      "num": "001",
+      "spotifyId": "6DTkOJ1aqCzQYwx5qRw4SQ",
+      "badge": "Where It All Began"
+    }
   ],
   "clips": [
+    "ITbHexdnv2E",
+    "gCHf8q1E4zU",
     "wGsXo5x0KAI",
     "vqKCPF6vD70",
     "R1NjEXwaWeA",
