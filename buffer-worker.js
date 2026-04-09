@@ -150,7 +150,12 @@ export default {
       ));
 
       const errors = results
-        .map((r, i) => r.data?.createPost?.message ? { channelId: channelIds[i], error: r.data.createPost.message } : null)
+        .map((r, i) => {
+          if (r.errors?.length)              return { channelId: channelIds[i], error: r.errors[0].message };
+          if (r.data?.createPost?.message)   return { channelId: channelIds[i], error: r.data.createPost.message };
+          if (!r.data?.createPost?.post)     return { channelId: channelIds[i], error: 'No post returned', raw: JSON.stringify(r) };
+          return null;
+        })
         .filter(Boolean);
 
       const successes = results

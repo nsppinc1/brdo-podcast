@@ -906,7 +906,7 @@
         } else if (successCount > 0 && errorCount > 0) {
           setStatus(statusEl, 'success', `✓ Published to ${successCount} platform${successCount > 1 ? 's' : ''}, but ${errorCount} failed: ${pubData.errors.map(e => e.error).join(', ')}`);
         } else {
-          throw new Error(pubData.errors?.map(e => e.error).join(', ') || 'Unknown error');
+          throw new Error(pubData.errors?.map(e => e.raw ? `${e.error}: ${e.raw}` : e.error).join(', ') || 'Unknown error');
         }
       } catch(err) {
         setStatus(statusEl, 'error', 'Error: ' + err.message);
