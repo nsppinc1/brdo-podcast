@@ -3,13 +3,17 @@
 // Required secrets:  BUFFER_API_KEY  (set in Worker Settings → Variables and Secrets)
 // Required bindings: CLIPS_BUCKET    (R2 bucket: brdo-clips)
 
-const BUFFER_API  = 'https://api.buffer.com';
-const ALLOWED_ORIGIN = 'https://brdostudios.com';
+const BUFFER_API = 'https://api.buffer.com';
+const ALLOWED_ORIGINS = [
+  'https://brdostudios.com',
+  'https://www.brdostudios.com',
+  'http://localhost',
+  'http://127.0.0.1'
+];
 
 // ─── CORS headers ────────────────────────────────────────
 function cors(origin) {
-  const allowed = [ALLOWED_ORIGIN, 'http://localhost', 'http://127.0.0.1'];
-  const o = allowed.some(a => origin && origin.startsWith(a)) ? origin : ALLOWED_ORIGIN;
+  const o = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': o,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
